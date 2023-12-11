@@ -1,10 +1,9 @@
 <template>
   <main>
-    {{ $t("thisIsAHomeView") }}
-    <HelloWorld />
+    <JoystickPos />
   </main>
 </template>
 
 <script setup lang="ts">
-import HelloWorld from '../components/HelloWorld.vue'
+import JoystickPos from '@/components/JoystickPos.vue'
 </script>

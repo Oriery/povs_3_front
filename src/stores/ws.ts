@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue'
 import { storeToRefs, defineStore } from 'pinia'
+import { useJoystickStore } from '../stores/joystick.js'
 
 export type WsMessage = {
   type: 'ping' | 'log' | 'info' | 'pong' | 'error' | 'message'
@@ -9,6 +10,8 @@ export type WsMessage = {
 const wsUrl = import.meta.env.VITE_WS_URL
 
 export const useWsStore = defineStore('ws', () => {
+  const joystickStore = useJoystickStore()
+
   const ws = ref(null as WebSocket | null)
   const isConnectedToServer = ref(false)
   let intervalForReconnect: Parameters<typeof clearInterval>[0] | undefined = undefined
@@ -116,7 +119,19 @@ export const useWsStore = defineStore('ws', () => {
         break
       }
       case 'message': {
-        console.log('message from server: ' + message.message)
+        onMessageMessage(message.message)
+        break
+      }
+      default:
+        console.error('Unknown message type: ' + JSON.stringify(message))
+    }
+  }
+
+  function onMessageMessage(message: string) {
+    const type = message.split(' ')[0]
+    switch (type) {
+      case 'JS:': {
+        joystickStore.updateJoystickPosition(message)
         break
       }
       default:
