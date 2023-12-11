@@ -29,9 +29,22 @@
 import { RouterLink, RouterView } from 'vue-router'
 import LangPicker from './components/LangPicker.vue'
 import { Notivue, Notifications } from 'notivue'
+import { onMounted, onUnmounted } from 'vue'
+import { useWsStore } from './stores/ws.js'
+const wsStore = useWsStore()
+const { connect, disconnect } = wsStore
 
 const links = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
 ]
+
+onMounted(() => {
+  connect()
+})
+
+onUnmounted(() => {
+  disconnect()
+})
+
 </script>
