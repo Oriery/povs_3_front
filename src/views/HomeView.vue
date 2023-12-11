@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col gap-2">
     <JoystickPos />
-    <CubeScene />
+    <CubeScene class="flex-grow"/>
   </main>
 </template>
 

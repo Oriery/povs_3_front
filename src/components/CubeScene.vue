@@ -1,5 +1,5 @@
 <template>
-  <div ref="canvasParent"></div>
+  <div ref="canvasParent" class="w-full h-full"></div>
 </template>
 
 <script setup lang="ts">
@@ -18,11 +18,14 @@ let camera : THREE.Camera | null = null
 onMounted(() => {
   if (!canvasParent.value) throw new Error('canvasParent is null')
 
+  const width = canvasParent.value.clientWidth
+  const height = canvasParent.value.clientHeight
+
   scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
 
   renderer = new THREE.WebGLRenderer()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(width, height)
   canvasParent.value.appendChild(renderer.domElement)
 
   const geometry = new THREE.BoxGeometry( 1, 3, 1 );
