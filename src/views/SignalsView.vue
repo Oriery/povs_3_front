@@ -50,7 +50,7 @@ export type WaveParams = {
 
 const currentWaveParams = ref<WaveParams>({
   amplitude: 500,
-  frequency: 10,
+  frequency: 1,
 })
 const currAmplitude = computed(() => currentWaveParams.value.amplitude)
 const currFrequency = computed(() => currentWaveParams.value.frequency)

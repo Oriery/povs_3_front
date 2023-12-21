@@ -60,7 +60,7 @@ onMounted(() => {
   // @ts-ignore
   interval = setInterval(() => {
     updatePlotData(props.data.ref.value)
-  }, 500)
+  }, 100)
 })
 
 onUnmounted(() => {
