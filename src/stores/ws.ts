@@ -97,9 +97,12 @@ export const useWsStore = defineStore('ws', () => {
     }
   }
 
-  function sendMessage(message: WsMessage) {
+  function sendMessage(message: WsMessage, multisend = 1) {
     if (ws.value && ws.value.readyState === WebSocket.OPEN) {
-      ws.value.send(JSON.stringify(message))
+      for (let i = 0; i < multisend; i++) {
+        ws.value.send(JSON.stringify(message))
+      }
+      console.log('Sent message to server: ' + JSON.stringify(message))
     } else {
       console.error('Cannot send message: WebSocket is not open')
     }

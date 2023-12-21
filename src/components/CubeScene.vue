@@ -61,7 +61,7 @@ onMounted(() => {
   joystickBgMesh.position.z -= 0.01
   scene.add(joystickBgMesh)
 
-
+  // @ts-ignore
   interval = setInterval(() => {
     if (!renderer || !scene || !camera) return
 

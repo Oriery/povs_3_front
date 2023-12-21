@@ -9,38 +9,64 @@
 </template>
 
 <script setup lang="ts">
-import Plotly from "plotly.js-dist-min";
-import { ref, onMounted, watch } from "vue";
-import type { Ref } from "vue";
+import Plotly from 'plotly.js-dist-min'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
+import type { Ref } from 'vue'
+import type { PlotlyHTMLElement } from 'plotly.js-dist-min'
+
+export type PlotData = Array<number> | number[]
 
 const props = defineProps<{
-  data: { ref: Ref<Array<number> | number[]> };
-  title?: string;
-  logorithmicScaleAllowed?: boolean;
-}>();
+  data: { ref: Ref<PlotData> }
+  title?: string
+  logorithmicScaleAllowed?: boolean
+}>()
 
-const el: Ref<HTMLDivElement> = ref(null as any);
-const logorithmicScale = ref(false);
+const el: Ref<HTMLDivElement> = ref(null as any)
+const logorithmicScale = ref(false)
 
-onMounted(drawData);
+onMounted(drawData)
 
-watch(props.data.ref, drawData);
-watch(logorithmicScale, drawData);
+watch(props.data.ref, drawData)
+watch(logorithmicScale, drawData)
 
-function drawData() {
-  Plotly.newPlot(
+const plot = ref(null as PlotlyHTMLElement | null)
+
+async function drawData() {
+  plot.value = await Plotly.newPlot(
     el.value,
     [
       {
         y: props.data.ref.value,
-        type: "scatter",
+        type: 'scatter',
       },
     ],
     {
       title: props.title,
-      yaxis: { type: logorithmicScale.value ? "log" : undefined },
+      yaxis: { type: logorithmicScale.value ? 'log' : undefined },
     },
-    { responsive: true }
-  );
+    { responsive: true },
+  )
 }
+
+async function updatePlotData(newData: PlotData) {
+  if (!plot.value) return
+  await Plotly.restyle(plot.value, { y: [newData] })
+}
+
+let interval : number | undefined = undefined
+
+onMounted(() => {
+  // @ts-ignore
+  interval = setInterval(() => {
+    updatePlotData(props.data.ref.value)
+  }, 500)
+})
+
+onUnmounted(() => {
+  if (interval) {
+    clearInterval(interval)
+  }
+})
+
 </script>

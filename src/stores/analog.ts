@@ -4,7 +4,7 @@ import { ref } from 'vue'
 export const useAnalogStore = defineStore('analog', () => {
   const analogSignal = ref(0)
 
-  const dataWidth = 1000
+  const dataWidth = 400
   const lastData = ref(new Array<number>(dataWidth).fill(0))
 
   function updateAnalogSignal(message: string) {
