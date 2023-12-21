@@ -1,6 +1,7 @@
 import { ref, watch } from 'vue'
 import { storeToRefs, defineStore } from 'pinia'
 import { useJoystickStore } from '../stores/joystick.js'
+import { useAnalogStore } from './analog.js'
 
 export type WsMessage = {
   type: 'ping' | 'log' | 'info' | 'pong' | 'error' | 'message'
@@ -11,6 +12,7 @@ const wsUrl = import.meta.env.VITE_WS_URL
 
 export const useWsStore = defineStore('ws', () => {
   const joystickStore = useJoystickStore()
+  const analogStore = useAnalogStore()
 
   const ws = ref(null as WebSocket | null)
   const isConnectedToServer = ref(false)
@@ -95,7 +97,7 @@ export const useWsStore = defineStore('ws', () => {
     }
   }
 
-  function sendMessage(message : WsMessage) {
+  function sendMessage(message: WsMessage) {
     if (ws.value && ws.value.readyState === WebSocket.OPEN) {
       ws.value.send(JSON.stringify(message))
     } else {
@@ -132,6 +134,10 @@ export const useWsStore = defineStore('ws', () => {
     switch (type) {
       case 'JS:': {
         joystickStore.updateJoystickPosition(message)
+        break
+      }
+      case 'An:': {
+        analogStore.updateAnalogSignal(message)
         break
       }
       default:
